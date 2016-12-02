@@ -1,0 +1,26 @@
+{
+  "name": "first",
+  "version": "0.0.0",
+  "description": "first",
+  "main": "app/main.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "electron .",
+    "build": "build --x64"
+  },
+  "build": {},
+  "author": "hans",
+  "license": "ISC",
+  "devDependencies": {
+    "electron": "^1.4.8",
+    "electron-builder": "^8.6.0",
+    "electron-packager": "^8.3.0",
+    "electron-winstaller": "^2.4.1",
+    "grunt": "^1.0.1",
+    "grunt-electron-installer": "^2.1.0",
+    "gulp": "^3.9.1"
+  },
+  "dependencies": {
+    "electron-squirrel-startup": "^1.0.0"
+  }
+}

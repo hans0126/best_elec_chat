@@ -1,0 +1,726 @@
+﻿body {
+    margin: 0 auto;
+    padding: 0px;
+    font-size: 16px;
+    font-family: "微軟正黑體", "Microsoft JhengHei";
+    background-color: #FAFAFA;
+    overflow: hidden;
+}
+
+div {
+    -webkit-box-sizing: border-box;
+    -moz-box-sizing: border-box;
+    box-sizing: border-box;
+}
+
+a,
+a:visited,
+a:hover,
+a:active {
+    text-decoration: none;
+    border: none;
+}
+
+ul {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+#CB {
+    clear: both;
+}
+
+.trans {
+    -webkit-transition: all 0.4s ease;
+    -o-transition: all 0.4s ease;
+    transition: all 0.4s ease;
+}
+
+
+/* scroll */
+
+.Scroll::-webkit-scrollbar {
+    width: 10px;
+}
+
+.Scroll::-webkit-scrollbar-track {
+    /*-webkit-box-shadow: inset 0 0 6px rgba(0,0,0,0.3);*/
+    border-left: 1px solid #DEDEDE;
+    background-color: #FAFAFA;
+}
+
+.Scroll::-webkit-scrollbar-thumb {
+    border: 1px solid #DEDEDE;
+    background-color: #E5E5E5;
+    /*outline: 1px solid slategrey;*/
+}
+
+#besttourTalk {
+    margin: 0px;
+    padding: 0px;
+    width: 100vw;
+    height: 100vh;
+    position: relative;
+}
+
+#besttourTalk .Menu {
+    width: 60px;
+    height: 100%;
+    color: #CCC;
+    background-color: #333;
+    position: absolute;
+    top: 0;
+    left: 0;
+}
+
+#besttourTalk .List {
+    width: 240px;
+    height: -moz-calc(100% - 30px);
+    height: -webkit-calc(100% - 30px);
+    height: calc(100% - 30px);
+    position: absolute;
+    top: 40px;
+    left: 60px;
+    border-top: 1px solid #CCC;
+    background-color: #FAFAFA;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#besttourTalk .Talk {
+    width: -moz-calc(100% - 300px);
+    width: -webkit-calc(100% - 300px);
+    width: calc(100% - 300px);
+    height: 100%;
+    border-left: 1px solid #CCC;
+    position: absolute;
+    top: 0;
+    left: 300px;
+}
+
+
+/* 主選單 ---------------------------------------------------- */
+
+#besttourTalk .MenuItem {
+    width: 100%;
+    height: 60px;
+    background-position: center;
+    background-repeat: no-repeat;
+    cursor: pointer;
+}
+
+#besttourTalk .MenuItem:hover {
+    background-color: #1E1E1E;
+}
+
+#besttourTalk .Menu_txt {
+    width: 60px;
+    height: 24px;
+    line-height: 24px;
+    color: #E2E2E2;
+    font-size: 13px;
+    text-align: center;
+    background-image: url(images/Menu_txt.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: 0px;
+    left: 60px;
+    z-index: 66;
+    display: none;
+}
+
+
+/*喜鴻*/
+
+#besttourTalk .Menu_hsihung {
+    background-image: url(images/Menu_hsihung.svg);
+}
+
+
+/*導遊*/
+
+#besttourTalk .Menu_guide {
+    background-image: url(images/Menu_guide.svg);
+}
+
+
+/*客戶*/
+
+#besttourTalk .Menu_client {
+    background-image: url(images/Menu_client.svg);
+}
+
+
+/*群組*/
+
+#besttourTalk .Menu_group {
+    background-image: url(images/Menu_group.svg);
+}
+
+
+/*聊天*/
+
+#besttourTalk .Menu_chat {
+    background-image: url(images/Menu_chat.svg);
+}
+
+
+/* 搜尋 ---------------------------------------- */
+
+#besttourTalk .Search {
+    margin: 5px;
+    width: 230px;
+    height: 30px;
+    background-color: #FAFAFA;
+    position: absolute;
+    top: 0px;
+    left: 60px;
+}
+
+#besttourTalk .search_Input {
+    padding: 0px 5px;
+    width: -moz-calc(100% - 42px);
+    width: -webkit-calc(100% - 42px);
+    width: calc(100% - 42px);
+    height: 28px;
+    line-height: 28px;
+    color: #333;
+    font-size: 15px;
+    border: none;
+    position: relative;
+    z-index: 10;
+    border-right: 1px solid #DEDEDE;
+    background-color: #FAFAFA;
+}
+
+#besttourTalk .search_Input:focus {
+    outline: none;
+}
+
+#besttourTalk .Search_Btn {
+    width: 30px;
+    height: 30px;
+    float: right;
+    background-image: url(images/btn_search.svg);
+    background-size: 26px;
+    background-position: center;
+    background-repeat: no-repeat;
+    position: relative;
+    z-index: 12;
+    cursor: pointer;
+}
+
+
+/* 聯絡清單 ---------------------------------------- */
+
+#besttourTalk .List_item {
+    width: 100%;
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+    border-bottom: 1px solid #CCC;
+    background-image: url(images/List_A_0.svg);
+    background-repeat: no-repeat;
+    background-position: right center;
+    cursor: pointer;
+}
+
+#besttourTalk .List_select {
+    background-image: url(images/List_A_1.svg);
+}
+
+#besttourTalk .List_A {
+    padding: 0px 0px 0px 10px;
+    background-color: #E5E5E5;
+}
+
+#besttourTalk .List_B {
+    padding: 0px;
+    background-color: #FAFAFA;
+    border-bottom: 1px solid #CCC;
+}
+
+#besttourTalk .List_B_title {
+    padding: 0px 20px;
+    width: 100%;
+    color: #333;
+    background-image: url(images/List_A_0.svg);
+    background-position: right 20px center;
+    border: none;
+}
+
+#besttourTalk .List_B_select {
+    padding: 0px 20px;
+    width: 100%;
+    color: #00B7D7;
+    font-weight: bold;
+    background-color: #FFF;
+    background-image: url(images/List_A_blue.svg);
+    background-position: right 20px center;
+    border: none;
+}
+
+#besttourTalk .List_B_content {
+    margin: 0 auto;
+    padding: 0px;
+    width: 100%;
+    background-color: #FFF;
+    border-top: 1px solid #DEDEDE;
+}
+
+#besttourTalk .person {
+    margin: 0px;
+    padding: 8px 20px;
+    width: 100%;
+    cursor: pointer;
+}
+
+#besttourTalk .person:hover {
+    background-color: #F5F5F5;
+}
+
+#besttourTalk .person_img {
+    width: 34px;
+    height: 34px;
+    line-height: 34px;
+    float: left;
+    border-radius: 99em;
+    background-position: center;
+    background-repeat: no-repeat;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+#besttourTalk .person_name {
+    margin-left: 5px;
+    height: 34px;
+    line-height: 34px;
+    float: left;
+    color: #333;
+    font-size: 16px;
+    font-weight: bold;
+    text-align: left;
+}
+
+#besttourTalk .person_num {
+    margin: 13px 0px 0px 6px;
+    width: 8px;
+    height: 8px;
+    float: left;
+    border-radius: 99em;
+    background-color: #00B7D7;
+}
+
+#besttourTalk .List_C {
+    padding: 0px 20px;
+    width: 100%;
+    height: 40px;
+    line-height: 40px;
+    font-size: 14px;
+    font-weight: bold;
+    color: #333;
+}
+
+
+/* 聊天區 ---------------------------------------- */
+
+#besttourTalk .Talk_Content {
+    padding: 10px;
+    width: 100%;
+    height: -moz-calc(100% - 140px);
+    height: -webkit-calc(100% - 140px);
+    height: calc(100% - 140px);
+    border-bottom: 1px solid #CCC;
+    overflow-x: hidden;
+    overflow-y: auto;
+}
+
+#besttourTalk .Talk_Menu {
+    padding-left: 5px;
+    width: 100%;
+    height: 40px;
+    border-bottom: 1px solid #CCC;
+    background-color: #F5F5F5;
+    position: relative;
+}
+
+#besttourTalk .Talk_input {
+    width: 100%;
+    height: 100px;
+    position: relative;
+}
+
+
+/* 聊天區功能 */
+
+#besttourTalk .Talk_Menu_item {
+    margin: 0px;
+    width: 50px;
+    height: 40px;
+    cursor: pointer;
+    background-position: center;
+    background-repeat: no-repeat;
+    float: left;
+}
+
+#besttourTalk .Talk_Menu_item:hover {
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+}
+
+#besttourTalk .Talk_Menu_emoji {
+    background-image: url(images/icon_emoji.svg);
+}
+
+#besttourTalk .Talk_Menu_sticker {
+    background-image: url(images/icon_sticker.svg);
+}
+
+#besttourTalk .Talk_Menu_file {
+    background-image: url(images/icon_file.svg);
+}
+
+#besttourTalk .Talk_Menu_catch {
+    background-image: url(images/icon_catch.svg);
+}
+
+#besttourTalk .Talk_input_btnTB {
+    width: 60px;
+    height: 30px;
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+}
+
+#besttourTalk .Talk_input_btn {
+    width: 100%;
+    height: 100%;
+    color: #FFF;
+    font-size: 14px;
+    text-align: center;
+    border: none;
+    border-radius: 6px;
+    background-color: #00B7D7;
+    cursor: pointer;
+}
+
+#besttourTalk .Talk_input_btn:hover {
+    background-color: #00A5C2;
+}
+
+#besttourTalk .Talk_input_btn:focus {
+    outline: none;
+}
+
+#besttourTalk .Talk_Menu_txt {
+    width: 50px;
+    height: 30px;
+    line-height: 24px;
+    color: #FAFAFA;
+    font-size: 13px;
+    text-align: center;
+    background-image: url(images/icon_txt_bg.svg);
+    background-position: center;
+    background-repeat: no-repeat;
+    position: absolute;
+    top: -38px;
+    display: none;
+    z-index: 99;
+}
+
+
+/* 文字大小 */
+
+#besttourTalk .Talk_Menu_item_A {
+    margin: 0px;
+    width: 40px;
+    height: 40px;
+    cursor: pointer;
+    background-position: center;
+    background-repeat: no-repeat;
+    float: right;
+}
+
+#besttourTalk .Talk_Menu_item_A:hover {
+    border-left: 1px solid #CCC;
+    border-right: 1px solid #CCC;
+}
+
+#besttourTalk .Talk_Menu_A {
+    background-image: url(images/icon_A.svg);
+}
+
+#besttourTalk .Talk_Menu_Aa {
+    background-image: url(images/icon_Aa.svg);
+}
+
+#besttourTalk .Talk_Menu_Ad {
+    background-image: url(images/icon_Ad.svg);
+}
+
+
+/* 訊息區 ------------------------------------*/
+
+#besttourTalk .Message {
+    margin: 15px 0px;
+    width: 100%;
+}
+
+#besttourTalk .Message_img {
+    width: 40px;
+    height: 40px;
+    border-radius: 99em;
+    background-image: url(images/person_img.jpg);
+    background-position: center;
+    background-repeat: no-repeat;
+    float: left;
+    -webkit-background-size: cover;
+    -moz-background-size: cover;
+    -o-background-size: cover;
+    background-size: cover;
+}
+
+
+/* From */
+
+#besttourTalk .Message_From_icon {
+    width: 17px;
+    height: 40px;
+    background-image: url(images/Message_txt_arrow_From.svg);
+    background-position: right -1px center;
+    background-repeat: no-repeat;
+    float: left;
+}
+
+#besttourTalk .Message_From_txt {
+    padding: 10px;
+    max-width: -moz-calc(100% - 180px);
+    max-width: -webkit-calc(100% - 180px);
+    max-width: calc(100% - 180px);
+    color: #000;
+    font-size: 16px;
+    border-radius: 6px;
+    background-color: #B3E7F0;
+    float: left;
+}
+
+#besttourTalk .Message_From_time {
+    margin: 5px 5px 0px 5px;
+    width: 80px;
+    color: #8A8A8A;
+    font-size: 12px;
+    text-align: left;
+    float: left;
+}
+
+#besttourTalk .Message_From_emoji {
+    padding: 0px 0px 0px 10px;
+    max-width: -moz-calc(100% - 220px);
+    max-width: -webkit-calc(100% - 220px);
+    max-width: calc(100% - 220px);
+    float: left;
+}
+
+#besttourTalk .Message_From_emoji img {
+    width: 100%;
+    height: auto;
+}
+
+#besttourTalk .Message_From_sticker {
+    padding: 0px 0px 0px 10px;
+    max-width: -moz-calc(100% - 220px);
+    max-width: -webkit-calc(100% - 220px);
+    max-width: calc(100% - 220px);
+    float: left;
+}
+
+#besttourTalk .Message_From_sticker img {
+    width: 180px;
+    height: auto;
+}
+
+
+/* To */
+
+#besttourTalk .Message_To_icon {
+    width: 17px;
+    height: 40px;
+    background-image: url(images/Message_txt_arrow_To.svg);
+    background-position: left -1px center;
+    background-repeat: no-repeat;
+    float: right;
+}
+
+#besttourTalk .Message_To_txt {
+    padding: 10px;
+    max-width: -moz-calc(100% - 220px);
+    max-width: -webkit-calc(100% - 220px);
+    max-width: calc(100% - 220px);
+    color: #000;
+    font-size: 16px;
+    border-radius: 6px;
+    background-color: #6FD6E9;
+    float: right;
+}
+
+#besttourTalk .Message_To_time {
+    margin: 5px 6px 0px 5px;
+    width: 80px;
+    color: #8A8A8A;
+    font-size: 12px;
+    text-align: right;
+    float: right;
+}
+
+#besttourTalk .Message_To_emoji {
+    /*padding: 10px;*/
+    max-width: -moz-calc(100% - 220px);
+    max-width: -webkit-calc(100% - 220px);
+    max-width: calc(100% - 220px);
+    float: right;
+}
+
+#besttourTalk .Message_To_emoji img {
+    width: 100%;
+    height: auto;
+}
+
+#besttourTalk .Message_To_sticker {
+    /*padding: 10px;*/
+    max-width: -moz-calc(100% - 220px);
+    max-width: -webkit-calc(100% - 220px);
+    max-width: calc(100% - 220px);
+    float: right;
+}
+
+#besttourTalk .Message_To_sticker img {
+    width: 180px;
+    height: auto;
+}
+
+
+/* 表情 ------------------------------------------- */
+
+#emoji {
+    text-align: left;
+    position: absolute;
+    bottom: 135px;
+    left: 5px;
+    z-index: 20;
+    display: none;
+}
+
+.emoji_arrow {
+    width: 0px;
+    height: 0px;
+    margin-left: 12px;
+    border-style: solid;
+    border-width: 12px;
+    border-color: #00B7D7 transparent transparent transparent;
+    position: relative;
+    z-index: 10;
+}
+
+.emoji_TB {
+    margin-bottom: -5px;
+    padding: 8px;
+    width: 220px;
+    background-color: #FFF;
+    border: 1px solid #00B7D7;
+    position: relative;
+    z-index: 15;
+}
+
+.emoji_item {
+    padding: 3px;
+    width: 46px;
+    height: 46px;
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #FFF;
+    cursor: pointer;
+}
+
+.emoji_item:hover {
+    border: 1px solid #CCC;
+    border-radius: 5px;
+}
+
+.emoji_item img {
+    width: 100%;
+    height: auto;
+}
+
+
+/* 貼圖 ------------------------------------------- */
+
+#sticker {
+    text-align: left;
+    position: absolute;
+    bottom: 135px;
+    left: 5px;
+    z-index: 20;
+    display: none;
+}
+
+.sticker_arrow {
+    width: 0px;
+    height: 0px;
+    margin-left: 12px;
+    border-style: solid;
+    border-width: 12px;
+    border-color: #00B7D7 transparent transparent transparent;
+    position: relative;
+    left: 50px;
+    z-index: 10;
+}
+
+.sticker_TB {
+    margin-bottom: -5px;
+    padding: 6px;
+    width: 524px;
+    background-color: #FFF;
+    border: 1px solid #00B7D7;
+    position: relative;
+    z-index: 15;
+}
+
+.sticker_item {
+    padding: 3px;
+    width: 60px;
+    height: 60px;
+    display: inline-block;
+    background-position: center;
+    background-repeat: no-repeat;
+    border: 1px solid #FFF;
+    cursor: pointer;
+}
+
+.sticker_item:hover {
+    border: 1px solid #CCC;
+    border-radius: 5px;
+}
+
+.sticker_item img {
+    width: 100%;
+    height: auto;
+}
+
+
+/**/
+
+.writeBox {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    padding: 10px;
+}

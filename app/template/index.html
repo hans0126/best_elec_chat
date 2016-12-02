@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Document</title>
+    <link rel="stylesheet" href="css/default.css">
+    <script src="bower_components/angular/angular.min.js"></script>    
+    <script src="bower_components/angular-route/angular-route.min.js"></script>
+</head>
+
+<body ng-app="app" ng-controller="MainController">
+    <h1>test</h1>
+    <h2 id="version"><script>document.write(require('electron').remote.app.getVersion())</script></h2>
+    <a href="#/book">Moby</a>
+    <div ng-view></div>
+</body>
+	<script>
+		require('./lib/renderer.js');
+
+	</script>
+</html>

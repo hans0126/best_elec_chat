@@ -1,0 +1,22 @@
+<div id="besttourTalk">
+    <!--主選單-->
+    <div class="Menu">
+        <div class="MenuItem Menu_hsihung" ng-click="switchBtn('organizeresShow')"></div>
+        <div class="MenuItem Menu_guide"></div>
+        <div class="MenuItem Menu_client"></div>
+        <div class="MenuItem Menu_group" ng-click="switchBtn('projectShow')"></div>
+        <div class="MenuItem Menu_chat"></div>
+        <div id="menuTxt" class="Menu_txt">喜鴻</div>
+    </div>
+    <!--搜尋-->
+    <div class="Search" search-input>
+    </div>
+    <!--聯絡人-->
+    <div ng-show="ct.organizeresShow" class="List Scroll" organizeres-list ng-if="organizeres.length > 0"></div>
+    <div ng-show="ct.projectShow" class="List Scroll" room-list="project"></div>
+    <div ng-show="ct.searchShow" class="List Scroll" room-list="searchRooms"></div>
+    <!--組織聊天-->
+    <!--聊天區-->
+    <div class="Talk" talk_area ng-if="activeRoom"></div>
+    <div id="CB"></div>
+</div>
