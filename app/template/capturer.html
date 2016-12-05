@@ -5,11 +5,23 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <style>
+
+	*{
+		box-sizing: border-box;
+	}
+
+    html,
+    body,
+    video {
+        height: 100%;
+        width: 100%;
+    }
+    
     html,
     body {
         margin: 0;
         padding: 0;
-        height: 100%;
+        overflow: hidden;
     }
     
     h1 {
@@ -17,51 +29,102 @@
     }
     
     video {
-        width: 1920px;
-        height: 1080px;
         position: absolute;
-        top: 1080px;
-        right: 1920px;
+        top: 9999px;
+        right: 9999px;
     }
     
     canvas {}
     
     #capture {
         position: absolute;
-        top: 1080px;
-        right: 1920px;
+        top: 9999px;
+        right: 9999px;
     }
     </style>
 </head>
 
-<body>
+<body onload="init()">
     <video></video>
     <canvas id="capture"></canvas>
     <canvas id="user_m"></canvas>
 </body>
 <script>
 const dialog = require('electron').remote.dialog
+const {
+    remote
+} = require('electron');
 var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
+
+const electron = require('electron')
+
 const {
     desktopCapturer
 } = require('electron')
 
-const sourceWidth = 1920,
-    sourceHeight = 1080;
+var screenElectron = electron.screen.getPrimaryDisplay().size;
+
+const sourceWidth = screenElectron.width,
+    sourceHeight = screenElectron.height;
 
 var canvas = document.querySelector('#capture'),
     user_m = document.querySelector('#user_m'),
     video = document.querySelector('video'),
-    body = document.querySelector('body'),
-    cropInfo = {
-        sx: null,
-        sy: null,
-        ex: null,
-        ey: null,
-        cWidth: null,
-        cHeight: null,
-        start: false,
-    };
+    body = document.querySelector('body');
+
+
+
+cropInfo = {
+    sx: null,
+    sy: null,
+    ex: null,
+    ey: null,
+    cWidth: null,
+    cHeight: null,
+    start: false,
+};
+
+
+let actor = [{
+    type: "rect",
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0
+}, {
+    type: "rect",
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0
+}, {
+    type: "rect",
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0
+}, {
+    type: "rect",
+    x: 0,
+    y: 0,
+    width: 0,
+    height: 0
+}]
+
+var userCtx = user_m.getContext('2d');
+
+user_m.width = sourceWidth;
+user_m.height = sourceHeight;
+
+function init() {
+
+    userCtx.beginPath();
+    userCtx.fillStyle = "#333333";
+    userCtx.globalAlpha = 0.2;
+    userCtx.fillRect(0, 0, sourceWidth, sourceHeight);
+
+}
+
 
 body.addEventListener("mousedown", function(_e) {
     cropInfo.sx = _e.clientX;
@@ -77,7 +140,7 @@ body.addEventListener("mouseup", function(_e) {
     cropInfo.cWidth = cropInfo.ex - cropInfo.sx;
     cropInfo.cHeight = cropInfo.ey - cropInfo.sy;
 
-    //capture();
+    capture();
 
     cropInfo.start = false;
 })
@@ -110,7 +173,7 @@ body.addEventListener("mousemove", function(_e) {
             case 0:
                 _x = 0;
                 _y = 0;
-                  _h = cropInfo.sy;
+                _h = cropInfo.sy;
                 if (reverse) {
                     _w = cropInfo.sx;
                 } else {
@@ -154,10 +217,10 @@ body.addEventListener("mousemove", function(_e) {
 
                 _x = 0;
                 _h = user_m.height - cropInfo.sy;
-                 _y = cropInfo.sy;
-                if (reverse) {                   
+                _y = cropInfo.sy;
+                if (reverse) {
                     _w = _e.clientX;
-                } else {                   
+                } else {
                     _w = cropInfo.sx;
                 }
                 _color = "orange";
@@ -170,10 +233,11 @@ body.addEventListener("mousemove", function(_e) {
         userCtx.beginPath();
         //  userCtx.lineWidth = "1";
         userCtx.fillStyle = "#333333";
-        userCtx.fillRect(_x, _y, _w, _h);
+
         // userCtx.stroke();
 
         userCtx.globalAlpha = 0.2;
+        userCtx.fillRect(_x, _y, _w, _h);
     }
 
 
@@ -181,46 +245,36 @@ body.addEventListener("mousemove", function(_e) {
 });
 
 
-user_m.width = sourceWidth;
-user_m.height = sourceHeight;
 
-let actor = [{
-    type: "rect",
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-}, {
-    type: "rect",
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-}, {
-    type: "rect",
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-}, {
-    type: "rect",
-    x: 0,
-    y: 0,
-    width: 0,
-    height: 0
-}]
-
-var userCtx = user_m.getContext('2d');
-
+var _hasDialog = false;
 
 function capture() {
-    canvas.width = cropInfo.cWidth;
-    canvas.height = cropInfo.cHeight;
+    if (_hasDialog) return
+
+    canvas.width = Math.abs(cropInfo.cWidth);
+    canvas.height = Math.abs(cropInfo.cHeight);
     var ctx = canvas.getContext('2d');
     // ctx.drawImage(video, cropInfo.sx, cropInfo.sy, cropInfo.cWidth, cropInfo.cHeight);
 
-    ctx.drawImage(video, cropInfo.sx * -1, cropInfo.sy * -1, sourceWidth, sourceHeight);
 
+    let _x, _y;
+
+    if (cropInfo.sx >= cropInfo.ex) {
+        _x = cropInfo.ex;
+    } else {
+        _x = cropInfo.sx;
+    }
+
+    if (cropInfo.sy >= cropInfo.ey) {
+        _y = cropInfo.ey;
+    } else {
+        _y = cropInfo.sy;
+    }
+
+
+
+    ctx.drawImage(video, (_x+8) * -1, _y * -1, sourceWidth, sourceHeight);
+    //caputure 偏移
     //  _f = _f.replace(/^data:image\/png;base64,/, "");
 
 
@@ -230,6 +284,7 @@ function capture() {
     //console.log(_f);
 
     dialog.showSaveDialog(function(_filename) {
+        _hasDialog = false;
         if (_filename === undefined) {
             console.log("You didn't save the file");
             return;
@@ -240,11 +295,17 @@ function capture() {
             if (err) {
                 alert("An error ocurred creating the file " + err.message)
             }
+
+
             alert("The file has been succesfully saved");
+            var window = remote.getCurrentWindow();
+            window.close();
+
         });
     });
 
 
+    _hasDialog = true;
 }
 
 function img64(_dataUrl) {
@@ -257,7 +318,7 @@ function img64(_dataUrl) {
     return response.data
 }
 
-/*
+
 desktopCapturer.getSources({
     types: ['window', 'screen']
 }, (error, sources) => {
@@ -271,10 +332,10 @@ desktopCapturer.getSources({
                     mandatory: {
                         chromeMediaSource: 'desktop',
                         chromeMediaSourceId: sources[i].id,
-                        minWidth: 1920,
-                        maxWidth: 1920,
-                        minHeight: 1080,
-                        maxHeight: 1080
+                        minWidth: sourceWidth,
+                        maxWidth: sourceWidth,
+                        minHeight: sourceHeight,
+                        maxHeight: sourceHeight
                     }
                 }
             }, handleStream, handleError)
@@ -284,7 +345,7 @@ desktopCapturer.getSources({
 
     }
 })
-*/
+
 function handleStream(stream) {
     video.src = URL.createObjectURL(stream)
 }
@@ -292,23 +353,6 @@ function handleStream(stream) {
 function handleError(e) {
     console.log(e)
 }
-
-/*
-dialog.showSaveDialog(function (fileName) {
-       if (fileName === undefined){
-            console.log("You didn't save the file");
-            return;
-       }
-       // fileName is a string that contains the path and filename created in the save file dialog.  
-       fs.writeFile(fileName, content, function (err) {
-           if(err){
-               alert("An error ocurred creating the file "+ err.message)
-           }
-                        
-           alert("The file has been succesfully saved");
-       });
-}); 
-*/
 </script>
 
 </html>

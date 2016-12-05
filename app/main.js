@@ -1,4 +1,5 @@
-const { app, BrowserWindow, autoUpdater, Menu, Tray, ipcMain,dialog} = require('electron')
+const electron = require('electron')
+const { app, BrowserWindow, autoUpdater, Menu, Tray, ipcMain, dialog } = require('electron')
 if (require('electron-squirrel-startup')) app.quit();
 
 const request = require('request')
@@ -13,49 +14,6 @@ const feedURL = "http://127.0.0.1:3030/update/win" + (os.arch() === 'x64' ? '64'
 
 let windows = []
 
-function createWindow(_o) {
-
-    const _default = {
-        width: 800,
-        height: 600,
-        devTools: false,
-        close: () => {},
-        minimize: () => {},
-        templateUrl: null,
-        frame: true,
-        transparent:false
-    }
-
-    let _option = _extend(_default, _o)
-    let _w
-
-    // Create the browser window.
-    _w = new BrowserWindow({
-        width: _option.width,
-        height: _option.height,
-        frame: _option.frame,
-        transparent:_option.transparent
-    })
-
-    // and load the index.html of the app.
-    _w.loadURL(url.format({
-        pathname: path.join(__dirname, _option.templateUrl),
-        protocol: 'file:',
-        slashes: true
-    }))
-
-
-    // Open the DevTools.
-    if (_option.devTools) {
-        _w.webContents.openDevTools()
-    }
-
-    // Emitted when the window is closed.
-    _w.on('close', _option.close)
-    _w.on('minimize', _option.minimize)
-
-    return _w
-}
 
 app.on('ready', () => {
 
@@ -97,10 +55,14 @@ app.on('ready', () => {
 
 
 function mainProcess() {
-    windows['main'] = createWindow({
+
+    const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
+
+    console.log(width);
+
+    windows['main'] = new BrowserWindow({
         width: 860,
         height: 480,
-        templateUrl: "index.html",       
         close: (event) => {
             if (!app.isQuiting) {
                 event.preventDefault()
@@ -115,14 +77,29 @@ function mainProcess() {
         }
     })
 
-    windows['capturer'] = createWindow({
-        width: 800,
-        height: 800,
-        templateUrl: "./template/capturer.html",
-        frame:true,
-        transparent:false
+    windows['main'].loadURL(url.format({
+        pathname: path.join(__dirname, "index.html"),
+        protocol: 'file:',
+        slashes: true
+    }))
+
+
+    windows['capturer'] = new BrowserWindow({
+        frame: false,
+        transparent: true,
+        useContentSize: true
     })
 
+    windows['capturer'].loadURL(url.format({
+        pathname: path.join(__dirname, "./template/capturer.html"),
+        protocol: 'file:',
+        slashes: true
+    }))
+
+    windows['capturer'].setPosition(0, 0)
+
+    windows['capturer'].setFullScreen(true)
+    windows['capturer'].setResizable(false)
 
     var contextMenu = Menu.buildFromTemplate([
 
@@ -141,7 +118,7 @@ function mainProcess() {
         }
     ]);
 
-    var appIcon = new Tray('./1480604916_Battery_Full.png');    
+    var appIcon = new Tray('./1480604916_Battery_Full.png');
     appIcon.setContextMenu(contextMenu);
 
 
