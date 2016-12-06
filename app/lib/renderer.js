@@ -3,14 +3,6 @@ const socketUrl = 'ws://evpn.ittms.com.tw:5280';
 const { ipcRenderer } = require('electron');
 var io = require("socket.io-client");
 
-//
-
-
-	
-
-
-
-
 app.controller('mController', [
     "$scope",
     "$route",
@@ -45,8 +37,8 @@ app.controller('loginController', [
     "$location",
     function($scope, $routeParams, socket, $location) {
         var _self = this;
-        _self.user_account = "08073";
-        _self.user_password = "399394";
+        _self.user_account = "08072";
+        _self.user_password = "412524";
         _self.login = function() {
             let _oprion = {
                 query: "memberid=" + _self.user_account + "&passwd=" + _self.user_password
@@ -176,12 +168,14 @@ app.controller('chatController', [
             _.forEach(_re, function(_val, _idx) {
                 var _r = angular.copy($scope.chatRoomDataTemplate);
                 _r.roomid = _val.roomid;
-                _r.name = _val.name;
+                _r.name = _val.roomname;
 
                 $rootScope.rooms.push(_r);
                 $rootScope.project.push(_r);
                 $rootScope.roomsMap[_val.roomid] = _r;
             })
+
+             socket.emit('openhistoryreq');
 
         });
 
@@ -392,7 +386,24 @@ app.directive('singleMsg', ['$rootScope',
             link: function(scope, element, attrs) {
                 var _t = "";
 
-                var direct = 'To';
+                var direct = 'To',
+                  msgType = 'txt',
+                  msgContent ='';
+
+                   switch (scope.msg.messagetype) {
+                      case "1"://文字
+                          msgContent = scope.msg.message;
+                      break;  
+                      case "2"://檔案
+                          msgContent = "<a href='"+scope.msg.filepath+"' target='_blank'>"+scope.msg.filename+"</a>";
+                      break;
+                      case "3":
+                      case "4":
+                        msgType = "sticker";
+                        msgContent = "<a href='"+scope.msg.filepath+"' target='_blank'><img src='"+scope.msg.filepath+"'/></a>";
+                      break;
+
+                  }
 
                 if ($rootScope.account.employeeid != scope.msg.employeeid) {
                     var sendUser = $rootScope.usersMap[scope.msg.employeeid];
@@ -403,11 +414,15 @@ app.directive('singleMsg', ['$rootScope',
 
                 }
 
-                scope.message = scope.msg.message;
+               // scope.message = scope.msg.message;
                 scope.date = getDate(scope.msg.date);
 
-                _t += "<div class='Message_" + direct + "_icon'></div>";
-                _t += "<div class='Message_" + direct + "_txt'>{{message}}</div>";
+                 if(scope.msg.messagetype == "1" || scope.msg.messagetype=="2"){
+                     _t += "<div class='Message_" + direct + "_icon'></div>";
+                  }
+
+               
+                _t += "<div class='Message_" + direct + "_"+msgType+"'>"+msgContent+"</div>";
                 _t += "<div class='Message_" + direct + "_time'>{{date}}</div>";
                 _t += "<div id='CB'></div>";
 
@@ -454,6 +469,10 @@ app.directive('talkArea', ['socket',
 
                 scope.msgContent = angular.element(element[0].querySelectorAll('.Talk_Content'));
 
+                scope.openCapturer = function() {
+                    ipcRenderer.send('openCapturer')
+                }
+
                 writeBox.bind('click', function(e) {
                     rangeOffset = getCaretPosition();
                     scope.emotionShow = false;
@@ -461,12 +480,27 @@ app.directive('talkArea', ['socket',
                     scope.$apply();
                 })
 
+                ipcRenderer.on('getCapturerImg', (event, arg) => {
+                    var blob = b64toBlob(arg, 'image/jpeg');
+                    var blobUrl = URL.createObjectURL(blob);
+                    writeBox.html("<img src='" + blobUrl + "' style='max-height: 100%;'/>");
+
+                    var file = new File([blob], "test.jpg", {
+                        lastModified: new Date(0), // optional - default = now
+                        type: "image/jpeg" // optional - default = ''
+                    });
+                    
+                    socket.upload(file, { to: 'file', data: { 'roomid': $rootScope.activeRoom.roomid, 'id': '414324' } });
+
+                })
+
+
 
 
                 writeBox.bind('keydown', function(e) {
                     rangeOffset = getCaretPosition() + 1;
                     scope.userInput = writeBox.text();
-                    console.log("AA");
+
                     if (e.which === 13) {
                         e.preventDefault();
                         e.stopPropagation();
@@ -524,10 +558,11 @@ app.config(function($routeProvider, $locationProvider) {
 
 app.factory('socket', function($rootScope) {
     var socket;
-    // var socketIOFile = new SocketIOFileClient(socket);
+    var socketIOFile;
     return {
         init: function(_oprion) {
             socket = io.connect(socketUrl, _oprion);
+            socketIOFile = new SocketIOFileClient(socket);
             this.hasConnect = true;
         },
         on: function(eventName, callback) {
@@ -551,7 +586,8 @@ app.factory('socket', function($rootScope) {
         upload: function(file, options, callback) {
             socketIOFile.upload(file, options);
         },
-        hasConnect: false
+        hasConnect: false,
+        socketIOFile: socketIOFile
     };
 });
 //lodash
@@ -563,3 +599,29 @@ app.factory('_', ['$window',
         return $window._;
     }
 ])
+
+function b64toBlob(b64Data, contentType, sliceSize) {
+    contentType = contentType || '';
+    sliceSize = sliceSize || 512;
+
+    //console.log(b64Data);
+    b64Data = b64Data.replace(/^data:image\/jpeg;base64,/, "");
+    var byteCharacters = atob(b64Data);
+    var byteArrays = [];
+
+    for (var offset = 0; offset < byteCharacters.length; offset += sliceSize) {
+        var slice = byteCharacters.slice(offset, offset + sliceSize);
+
+        var byteNumbers = new Array(slice.length);
+        for (var i = 0; i < slice.length; i++) {
+            byteNumbers[i] = slice.charCodeAt(i);
+        }
+
+        var byteArray = new Uint8Array(byteNumbers);
+
+        byteArrays.push(byteArray);
+    }
+
+    var blob = new Blob(byteArrays, { type: contentType });
+    return blob;
+}

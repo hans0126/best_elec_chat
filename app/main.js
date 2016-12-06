@@ -56,50 +56,33 @@ app.on('ready', () => {
 
 function mainProcess() {
 
-    const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
+    //const { width, height } = electron.screen.getPrimaryDisplay().workAreaSize
 
-    console.log(width);
-
-    windows['main'] = new BrowserWindow({
+    let mainWin = new BrowserWindow({
         width: 860,
-        height: 480,
-        close: (event) => {
-            if (!app.isQuiting) {
-                event.preventDefault()
-                windows['main'].hide();
-            }
-            // return false;
-
-        },
-        minimize: (event) => {
-            event.preventDefault()
-                // windows['main'].hide();
-        }
+        height: 480
     })
 
-    windows['main'].loadURL(url.format({
+    mainWin.loadURL(url.format({
         pathname: path.join(__dirname, "index.html"),
         protocol: 'file:',
         slashes: true
     }))
 
-
-    windows['capturer'] = new BrowserWindow({
-        frame: false,
-        transparent: true,
-        useContentSize: true
+    mainWin.on('close', (event) => {
+        if (!app.isQuiting) {
+            event.preventDefault()
+            windows['main'].hide();
+        }
     })
 
-    windows['capturer'].loadURL(url.format({
-        pathname: path.join(__dirname, "./template/capturer.html"),
-        protocol: 'file:',
-        slashes: true
-    }))
+    mainWin.on('minimize', (event) => {
+        if (!app.isQuiting) {
+            event.preventDefault()
+        }
+    })
 
-    windows['capturer'].setPosition(0, 0)
-
-    windows['capturer'].setFullScreen(true)
-    windows['capturer'].setResizable(false)
+    windows['main'] = mainWin
 
     var contextMenu = Menu.buildFromTemplate([
 
@@ -130,7 +113,46 @@ function mainProcess() {
         }
     })
 
+    ipcMain.on('openCapturer', (event, arg) => {
+        createCapturer();
+    })
+
+    ipcMain.on('capturerImg', (event, arg) => {
+        windows['main'].webContents.send('getCapturerImg', arg)
+    })
+
+
+
 }
+
+function createCapturer() {
+
+    let capturerWindow = new BrowserWindow({
+        frame: false,
+        transparent: true,
+        useContentSize: true
+    })
+
+    capturerWindow.on('close', (event) => {
+        console.log("close Capturer window");
+        windows['capturer'] = null;
+    })
+
+    capturerWindow.loadURL(url.format({
+        pathname: path.join(__dirname, "./capturer.html"),
+        protocol: 'file:',
+        slashes: true
+    }))
+
+    capturerWindow.setPosition(0, 0)
+    capturerWindow.setFullScreen(true)
+    capturerWindow.setResizable(false)
+
+    windows['capturer'] = capturerWindow;
+
+
+}
+
 /*
 app.on('window-all-closed', () => {
     // On OS X it is common for applications and their menu bar

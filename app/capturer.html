@@ -5,11 +5,10 @@
     <meta charset="UTF-8">
     <title>Document</title>
     <style>
-
-	*{
-		box-sizing: border-box;
-	}
-
+    * {
+        box-sizing: border-box;
+    }
+    
     html,
     body,
     video {
@@ -51,16 +50,14 @@
 </body>
 <script>
 const dialog = require('electron').remote.dialog
-const {
-    remote
-} = require('electron');
-var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
-
 const electron = require('electron')
-
 const {
+    remote,
+    ipcRenderer,
     desktopCapturer
-} = require('electron')
+} = require('electron');
+
+var fs = require('fs'); // Load the File System to execute our common tasks (CRUD)
 
 var screenElectron = electron.screen.getPrimaryDisplay().size;
 
@@ -71,6 +68,13 @@ var canvas = document.querySelector('#capture'),
     user_m = document.querySelector('#user_m'),
     video = document.querySelector('video'),
     body = document.querySelector('body');
+
+document.addEventListener('keydown', (e) => {
+    if (e.keyCode === 27) {
+        closeWin();
+    }
+})
+
 
 
 
@@ -117,12 +121,10 @@ user_m.width = sourceWidth;
 user_m.height = sourceHeight;
 
 function init() {
-
     userCtx.beginPath();
     userCtx.fillStyle = "#333333";
     userCtx.globalAlpha = 0.2;
     userCtx.fillRect(0, 0, sourceWidth, sourceHeight);
-
 }
 
 
@@ -130,7 +132,6 @@ body.addEventListener("mousedown", function(_e) {
     cropInfo.sx = _e.clientX;
     cropInfo.sy = _e.clientY;
     cropInfo.start = true;
-
 });
 
 body.addEventListener("mouseup", function(_e) {
@@ -139,7 +140,7 @@ body.addEventListener("mouseup", function(_e) {
 
     cropInfo.cWidth = cropInfo.ex - cropInfo.sx;
     cropInfo.cHeight = cropInfo.ey - cropInfo.sy;
-
+     body.style.cursor = 'none';  
     capture();
 
     cropInfo.start = false;
@@ -236,7 +237,7 @@ body.addEventListener("mousemove", function(_e) {
 
         // userCtx.stroke();
 
-        userCtx.globalAlpha = 0.2;
+        userCtx.globalAlpha = 0.5;
         userCtx.fillRect(_x, _y, _w, _h);
     }
 
@@ -244,17 +245,18 @@ body.addEventListener("mousemove", function(_e) {
     // userCtx.clearRect(0, 0, user_m.width, user_m.height);
 });
 
-
-
+  
 var _hasDialog = false;
 
 function capture() {
     if (_hasDialog) return
+   
 
     canvas.width = Math.abs(cropInfo.cWidth);
     canvas.height = Math.abs(cropInfo.cHeight);
     var ctx = canvas.getContext('2d');
     // ctx.drawImage(video, cropInfo.sx, cropInfo.sy, cropInfo.cWidth, cropInfo.cHeight);
+
 
 
     let _x, _y;
@@ -273,16 +275,17 @@ function capture() {
 
 
 
-    ctx.drawImage(video, (_x+8) * -1, _y * -1, sourceWidth, sourceHeight);
+    ctx.drawImage(video, (_x + 8) * -1, _y * -1, sourceWidth, sourceHeight);
     //caputure 偏移
     //  _f = _f.replace(/^data:image\/png;base64,/, "");
 
 
     var _f = canvas.toDataURL('image/jpeg');
+    ipcRenderer.send('capturerImg', _f);
 
-
+    closeWin();
     //console.log(_f);
-
+    /*
     dialog.showSaveDialog(function(_filename) {
         _hasDialog = false;
         if (_filename === undefined) {
@@ -304,8 +307,13 @@ function capture() {
         });
     });
 
-
+    */
     _hasDialog = true;
+}
+
+function closeWin() {
+    var window = remote.getCurrentWindow();
+    window.close();
 }
 
 function img64(_dataUrl) {
